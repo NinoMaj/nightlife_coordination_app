@@ -8,4 +8,8 @@ Here are the specific user stories you should implement for this project:
 
 [] User Story: As an unauthenticated user, when I login I should not have to search again.
 
-This app is using Yelp API.
+[] Style it.
+
+[] Make tests.
+
+This app is using Google location API.

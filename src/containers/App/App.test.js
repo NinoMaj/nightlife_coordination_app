@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import App from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-});
+let wrapper; // "dom" node wrapper element
+beforeEach(() => {
+  wrapper = shallow(<App />);
+})
+
+it('has a Router component', () => {
+  expect(wrapper.find('Router'))
+    .toHaveLength(1);
+})

@@ -1,6 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-addons-test-utils';
+import { shallow } from 'enzyme';
 import Header from './Header';
-import { shallow } from 'enzyme'
 
 let wrapper;
 beforeEach(() => {
@@ -8,11 +10,11 @@ beforeEach(() => {
 });
 
 it('contains a title component with yelp', () => {
-  expect(wrapper.find('h1').first().text())
-    .toMatch('Yelp')
+  expect(wrapper.find('h2').first().text())
+    .toBe('Nighlife Coordination App');
 });
 
 it('contains a section menu with the title', () => {
   expect(wrapper.find('section').first().text())
-    .toMatch('Fullstack.io')
+    .toBe('Fullstack.io');
 });

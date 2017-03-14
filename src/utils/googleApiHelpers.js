@@ -1,7 +1,6 @@
 export function searchNearby(google, map, request) {
   return new Promise((resolve, reject) => {
     const service = new google.maps.places.PlacesService(map);
-
     service.nearbySearch(request, (results, status, pagination) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
 
@@ -11,4 +10,36 @@ export function searchNearby(google, map, request) {
       }
     })
   });
+}
+
+export function textSearch(google, map, request) {
+  return new Promise((resolve, reject) => {
+    const service = new google.maps.places.PlacesService(map);
+    service.textSearch(request, (results, status, pagination) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          var place = results[i];
+        }
+        resolve(place, pagination);
+      } else {
+        reject(results, status);
+      }
+    })
+  });
+}
+
+
+export function getDetails(google, map, placeId) {
+  return new Promise((resolve, reject) => {
+    const service = new google.maps.places.PlacesService(map);
+    const request = { placeId }
+
+    service.getDetails(request, (place, status) => {
+      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+        return reject(status);
+      } else {
+        resolve(place);
+      }
+    })
+  })
 }
