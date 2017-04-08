@@ -8,7 +8,10 @@ const UserSchema = new mongoose.Schema({
     index: { unique: true }
   },
   password: String,
-  name: String
+  name: {
+    type: String,
+    index: { unique: true }
+  }
 });
 
 /**
@@ -17,7 +20,7 @@ const UserSchema = new mongoose.Schema({
  * @param {string} password
  * @returns {object} callback
  */
-UserSchema.methods.comparePasswords = function comparePassword(password, callback) {
+UserSchema.methods.comparePassword = function comparePassword(password, callback) {
   bcrypt.compare(password, this.password, callback);
 };
 

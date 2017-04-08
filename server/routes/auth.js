@@ -11,8 +11,7 @@ const router = new express.Router();
  * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-
-function validateSignUpFrom(payload) {
+function validateSignupForm(payload) {
   const errors = {};
   let isFormValid = true;
   let message = '';
@@ -27,31 +26,29 @@ function validateSignUpFrom(payload) {
     errors.password = 'Password must have at least 8 characters.';
   }
 
-  if (!payload || typeof payload.name !== 'string' || payload.name.length === 0) {
+  if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
     isFormValid = false;
-    errors.password = 'Please provide your name.';
+    errors.name = 'Please provide your name.';
   }
 
   if (!isFormValid) {
-    message = 'Check forms for errors.';
+    message = 'Check the form for errors.';
   }
 
   return {
     success: isFormValid,
     message,
     errors
-  }
-
+  };
 }
 
 /**
  * Validate the login form
-  *
- * @param { object } payload - the HTTP body message
-  * @returns { object } The result of validation.Object contains a boolean validation result,
+ *
+ * @param {object} payload - the HTTP body message
+ * @returns {object} The result of validation. Object contains a boolean validation result,
  *                   errors tips, and a global message for the whole form.
  */
-
 function validateLoginForm(payload) {
   const errors = {};
   let isFormValid = true;
@@ -78,8 +75,8 @@ function validateLoginForm(payload) {
   };
 }
 
-router.post('/signup', (req, res) => {
-  const validationResult = validateSignUpFrom(req.body);
+router.post('/signup', (req, res, next) => {
+  const validationResult = validateSignupForm(req.body);
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,
@@ -87,6 +84,7 @@ router.post('/signup', (req, res) => {
       errors: validationResult.errors
     });
   }
+
 
   return passport.authenticate('local-signup', (err) => {
     if (err) {
@@ -96,7 +94,7 @@ router.post('/signup', (req, res) => {
         return res.status(409).json({
           success: false,
           message: 'Check the form for errors.',
-          erros: {
+          errors: {
             email: 'This email is already taken.'
           }
         });
@@ -117,6 +115,7 @@ router.post('/signup', (req, res) => {
 
 router.post('/login', (req, res, next) => {
   const validationResult = validateLoginForm(req.body);
+
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,

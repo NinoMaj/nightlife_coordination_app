@@ -2,81 +2,116 @@ import React from 'react';
 import Map, { Marker } from 'google-maps-react';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import Sidebar from '../Sidebar/Sidebar';
-// import { colors } from '../../colors';
+import Detail from '../../containers/Detail/Detail';
+import { screenSizes } from '../../screenSizes';
 
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 10,
-    width: '100%',
+    margin: '10px auto',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: '100%',
+    overflow: 'auto',
+    width: '100%',
+    [screenSizes.smartphone]: {
+      flexDirection: 'column',
+      margin: '0px auto',
+    },
+    [screenSizes.smartphoneLandscape]: {
+      flexDirection: 'column'
+    }
   },
   sidebar: {
     flex: '1'
   },
-  map: {
+  main: {
     flex: '2'
   }
 });
 
-const MapComponent = (props) => {
-
-  const renderMarkers = () => {
-    if (!props.places) {
+export class MapComponent extends React.Component {
+  renderMarkers() {
+    if (!this.props.places) {
       return null;
     }
-    return props.places.map(place => {
+    return this.props.places.map(place => {
       return <Marker
         key={place.id}
         name={place.id}
         place={place}
         label={place.name}
-        onClick={props.onMarkerClick}
-        map={props.map}
+        onClick={this.props.onMarkerClick}
+        map={this.props.map}
         position={place.geometry.location}
       />
     })
   }
 
-  const renderChildren = () => {
-    console.log('props.map in renderChildren in MapComponent', props.map)
-    const { children } = props;
+  renderChildren() {
+    const { children } = this.props;
     if (React.Children.count(children) > 0) {
       return React.Children.map(children, c => {
-        return React.cloneElement(c, props, {
-          map: props.map,
-          google: props.google
+        return React.cloneElement(c, this.props, {
+          map: this.props.map,
+          google: this.props.google
         })
       })
     } else {
-      return renderMarkers();
+      return this.renderMarkers();
     }
 
   }
-  const { children } = props;
-  return (
-    <div className={css(styles.container)}>
-      <Sidebar
-        className={css(styles.sidebar)}
-        title={'Restaurants'}
-        places={props.places}
-      />
-      <div className={css(styles.map)}>
-        <Map
-          map={props.map}
-          google={props.google}
-          zoom={props.zoom}
-          onRecenter={props.onMove}
-          onDragend={props.onMove}
-          onClick={props.onClick}
-          visible={!children || React.Children.count(children) === 0}
-        >
-          {renderChildren()}
-        </Map>
+  render() {
+    console.log('props in map Comp', this.props)    
+    const { children } = this.props;
+
+    return (
+      <div className={css(styles.container)}>
+        <div className={css(styles.sidebar)}>
+          <Sidebar
+            title={'Restaurants'}
+            places={this.props.places}
+            history={this.props.history}
+          />
+        </div>
+        <div className={css(styles.main)}>
+          {this.props.location && this.props.location.pathname.substring(1, 7) === 'detail' ? (
+            <Detail {...this.props} />
+          ) : (
+              <div>
+                <Map
+                  map={this.props.map}
+                  google={this.props.google}
+                  zoom={this.props.zoom}
+                  onRecenter={this.props.onMove}
+                  onDragend={this.props.onMove}
+                  onClick={this.props.onClick}
+                  visible={!children || React.Children.count(children) === 0}
+                >
+                  {this.renderChildren()}
+                </Map>
+              </div>
+            )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+}
+
+MapComponent.propTypes = {
+  google: React.PropTypes.object,
+  zoom: React.PropTypes.number,
+  initialCenter: React.PropTypes.object,
+  centerAroundCurrentLocation: React.PropTypes.bool
+}
+MapComponent.defaultProps = {
+  zoom: 13,
+  initialCenter: {
+    lat: 0,
+    lng: 0
+  },
+  centerAroundCurrentLocation: true
 }
 
 export default MapComponent;

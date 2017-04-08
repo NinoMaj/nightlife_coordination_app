@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import Auth from '../../modules/Auth';
+import { withRouter } from 'react-router';
 import LoginForm from '../../components/LoginForm/LoginForm';
 
+class LoginPagewoRouter extends React.Component {
 
-class LoginPage extends React.Component {
-
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  }
   /**
    * Class constructor.
    */
@@ -22,7 +26,7 @@ class LoginPage extends React.Component {
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
   }
-
+  
   /**
    * Process the form.
    *
@@ -51,7 +55,12 @@ class LoginPage extends React.Component {
           errors: {}
         });
 
-        console.log('The form is valid');
+        // save the token
+        Auth.authenticateUser(xhr.response.token, xhr.response.user);
+
+        // make a redirect
+        this.props.history.push('/');
+
       } else {
         // failure
 
@@ -98,4 +107,8 @@ class LoginPage extends React.Component {
 
 }
 
+// LoginPage.contextTypes = {
+//   router: React.PropTypes.object
+// }
+const LoginPage = withRouter(LoginPagewoRouter);
 export default LoginPage;

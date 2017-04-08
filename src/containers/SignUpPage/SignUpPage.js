@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { withRouter } from 'react-router';
 import SignUpForm from '../../components/SignUpForm/SignUpForm';
 
-class SignUpPage extends React.Component {
+class SignUpPagewoRouter extends React.Component {
+  
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  }
+
   constructor(props) {
     super(props)
 
@@ -55,7 +61,7 @@ class SignUpPage extends React.Component {
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
-      if (xhr.status == 200) {
+      if (xhr.status === 200) {
         // success
 
         // change the component-container status
@@ -63,7 +69,12 @@ class SignUpPage extends React.Component {
           errors: {}
         });
 
-        console.log('The form is valid.');
+        // set a message
+        localStorage.setItem('successMessage', xhr.response.message);
+
+        // make a redirect
+        this.props.history.push('/login');
+        
       } else {
         // failure
 
@@ -96,4 +107,5 @@ class SignUpPage extends React.Component {
 
 }
 
+const SignUpPage = withRouter(SignUpPagewoRouter);
 export default SignUpPage;

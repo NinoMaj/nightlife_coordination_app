@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('mongoose').model('User');
+const config = require('../../config/index.json');
 
 /**
  * The Auth Checker middleware function
  */
-model.exports = (req, res, next) => {
+module.exports = (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(401).end();
   }
@@ -16,15 +17,16 @@ model.exports = (req, res, next) => {
   return jwt.verify(token, config.jwtSecret, (err, decoded) => {
     // the 401 code is for authorized status
     if (err) { return res.status(401).end(); }
-  })
+  
   const userId = decoded.sub;
 
   // check if a user exists
-  return User.findById(userId, (UserErr, user) => {
+  return User.findById(userId, (userErr, user) => {
     if (userErr || !user) {
       return res.status(401).end();
     }
-
-    return next();
+    console.log('user in auth-check middleware:', user);
+    return next(user);
+  })
   })
 }

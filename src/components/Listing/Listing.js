@@ -6,9 +6,8 @@ const styles = StyleSheet.create({
   "container": {
     height: '100%',
     overflow: 'auto',
-    paddingBottom: '60px',
     margin: 0,
-    fontSize: '0.7em'
+    fontSize: '1em'
   }
 });
 
@@ -20,7 +19,9 @@ const Listing = (props) => {
           <Item
             place={place}
             onClick={props.onClick}
-            key={place.id} />
+            key={place.id}
+            history={props.history}
+            />
         )
       })}
     </div>

@@ -1,91 +1,142 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router';
 import { searchNearby } from '../../utils/googleApiHelpers';
 import Map, { GoogleApiWrapper } from 'google-maps-react';
 import { StyleSheet, css } from 'aphrodite/no-important';
-import Header from '../../components/Header/Header';
-// import { RouteHandler, Link, Route, Router } from 'react-router';
-// import MapContainer from '../MapContainer/MapContainer';
-
+import { screenSizes } from '../../screenSizes';
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
+    margin: 0,
+    padding: '15px',
+    height: '100vh',
+    flex: 1,
+    flexDirection: 'column',
+    [screenSizes.smartphone]: {
+      padding: "0px"
+    },
   }
 });
 
-export class Main extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    // const { push } = context.router.push
+export class MainwoRouter extends React.Component {
+
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  }
+
+  constructor(props) {
+    super(props);
 
     this.state = {
       places: [],
-      pagination: null
+      pagination: null,
+      currentLocation: {
+        lat: 0,
+        lng: 0
+      }
     }
+  }
+
+  updateLocation(){
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const coords = pos.coords;
+        this.setState({
+          currentLocation: {
+            lat: coords.latitude,
+            lng: coords.longitude
+          }
+        })
+        this.onReady();        
+      })
+    }
+   
   }
 
   onMarkerClick = (item) => {
     const { place } = item; // place prop
-    const { push } = this.context.router;
-    // const { push } = this.context.router.replaceWith('/');
-    push(`map/detail/${place.place_id}`)
+    this.props.history.push(`detail/${place.place_id}`);
   }
 
-  onReady = (mapProps, map) => {
-    searchNearby(
-      this.props.google,
-      map,
-      {
-        location: map.center,
-        radius: '500',
-        types: ['bar']
-      }
-    ).then((results, pagination) => {
-      this.setState({
-        places: results,
-        pagination
-      })
-    }).catch((status) => {
-      console.log('error fetching nearby', status)
-    })
-  }
-
-  render() {
-    let children = null;
-    if (this.props.children) {
-      // We have children in the Container component
-      children = React.cloneElement(
-        this.props.children,
-        {
-          google: this.props.google,
-          places: this.state.places,
-          loaded: this.props.loaded,
-          router: this.context.router,
-          onMove: this.onMapMove,
-          onMarkerClick: this.onMarkerClick,
-          zoom: this.props.zoom,
-        });
+  onReady = (mapProps) => {
+    const { lat, lng } = this.state.currentLocation;
+    if (lat === 0 && lng === 0) {
+      this.updateLocation();
+      return false;
     }
+    
+    const { google } = this.props;
+    const mapRef = this.refs.map;
+    const node = ReactDOM.findDOMNode(mapRef);
+    let zoom = 16;
+    
+    const center = new google.maps.LatLng(lat, lng);
+    const mapConfig = Object.assign({}, {
+      center: center,
+      zoom: zoom
+    })
+    let map = new google.maps.Map(node, mapConfig);
 
-    return (
-      <div className={css(styles.container)}>
-        <Map
-          google={this.props.google}
-          onReady={this.onReady.bind(this)}
-          visible={false}
-        />
-        <Header />
-        <div>
-          {children}
-        </div>
-      </div>
-    )
+        searchNearby(
+        google,
+        map,
+        {
+          location: map.center,
+          radius: '2000',
+          types: ['bar']
+        }
+      ).then((results, pagination) => {
+        this.setState({
+          places: results,
+          pagination
+        })
+      }).catch((status) => {
+        console.log('error fetching nearby', status)
+      })
   }
-}
 
-Main.contextTypes = {
-  router: React.PropTypes.object
-}
+    render() {
+      console.log('props in Main', this.props)
+      let children = null;
+      if (this.props.children) {
+        // We have children in the Container component
+        children = React.cloneElement(
+          this.props.children,
+          {
+            google: this.props.google,
+            places: this.state.places,
+            loaded: this.props.loaded,
+            onMove: this.onMapMove,
+            onMarkerClick: this.onMarkerClick,
+            zoom: this.props.zoom,
+            styles: this.props.styles,
+            map: this.props.map,
+            history: this.props.history,
+            match: this.props.match
+          });
+      }
 
-export default GoogleApiWrapper({
-  apiKey: 'AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'
-})(Main)
+      return (
+        <div className={css(styles.container)}>
+          <div style={{ display: 'none' }} ref='map' >
+            <Map
+              google={this.props.google}
+              onReady={this.onReady.bind(this)}
+              visible={false}
+            />
+          </div>
+          <div>
+            {children}
+          </div>
+        </div>
+      )
+    }
+  }
+
+  const Main = withRouter(MainwoRouter);
+
+  export default GoogleApiWrapper({
+    apiKey: 'AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo'
+  })(Main)

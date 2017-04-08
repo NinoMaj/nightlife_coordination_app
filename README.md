@@ -12,4 +12,6 @@ Here are the specific user stories you should implement for this project:
 
 [] Make tests.
 
+[] Use env instead of config/index.json
+
 This app is using Google location API.

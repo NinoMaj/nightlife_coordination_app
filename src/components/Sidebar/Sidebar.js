@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     padding: "0 10px"
   },
   h2: {
-    fontSize: "1.8em"
+    fontSize: "2em",
+    marginBottom: "15px"
   }
 });
 
@@ -24,7 +25,8 @@ const Sidebar = (props) => {
       <div className={css(styles.heading)}>
         <h2 className={css(styles.h2)}>{props.title}</h2>
         <Listing
-          places={props.places} 
+          places={props.places}
+          history={props.history}
         />
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { colors } from '../../colors';
 import Rating from '../Rating/Rating'
@@ -8,34 +9,38 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     borderBottom: '1px solid #eeeeee',
-    padding: '10px',
     textDecoration: 'none',
-    height: '50px',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    paddingTop: '10px',
+    paddingRight: '10px',
+    paddingBottom: '10px'
   },
   placeName: {
-    flex: '2',
+    fontSize: '1.2em',
+    marginRight: '10px',
+    cursor: 'pointer',
     ':hover': {
       color: colors.highlight
     }
   },
   rating: {
-    flex: '1',
-    height: '100%',
-    textAlign: 'right'
+    height: '100%'
   }
 });
 
 const Item = (props) => {
-  // console.log(props.place.name, props.place.rating)
+  const handleClick = () => {
+    const newLocation = `/detail/${props.place.place_id}`;
+    props.history.push(newLocation);
+  }
   return (
     <div className={css(styles.item)}>
-      <h2 className={css(styles.placeName)}>{props.place.name}</h2>
-      <Rating
-        className={css(styles.rating)}
-        percentage={(props.place.rating / 5)}
-      />
+      <h2 className={css(styles.placeName)} onClick={handleClick}>{props.place.name}</h2>
+      <div className={css(styles.rating)}>
+        <Rating percentage={(props.place.rating / 5)} />
+      </div>
     </div>
   )
 }

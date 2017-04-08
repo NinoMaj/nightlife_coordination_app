@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
@@ -18,12 +18,14 @@ const LoginForm = ({
   onSubmit,
   onChange,
   errors,
+  successMessage,
   user
 }) => (
     <Card className={css(styles.container)}>
       <form action="/" onSubmit={onSubmit}>
         <h2 className="card-heading">Login</h2>
 
+        {successMessage && <p className="success-message">{successMessage}</p>}
         {errors.summary && <p className="error-message">{errors.summary}</p>}
 
         <div className="field-line">
