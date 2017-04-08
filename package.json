@@ -6,6 +6,7 @@
     "aphrodite": "^1.1.0",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.1",
+    "dotenv": "^2.0.0",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
     "google-maps-react": "^1.0.19",

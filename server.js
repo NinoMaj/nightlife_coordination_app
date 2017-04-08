@@ -3,9 +3,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const config = require('./config/index.json');
-
+require('dotenv').load();
 // connect to the database and load models
-require('./server/models').connect(config.dbUri);
+require('./server/models').connect(process.env.DB_URI_LOCAL);
 
 const app = express();
 
@@ -53,6 +53,7 @@ app.use(function (req, res) {
   res.status(404).send('Sorry cant find that!');
 })
 
-app.listen(4000, () => {
-  console.log('Server is running on http://localhost:4000')
+const port = process.env.SERVER_PORT || 5000;
+app.listen(port, () => {
+  console.log('Server is running on http://localhost:' + port)
 })

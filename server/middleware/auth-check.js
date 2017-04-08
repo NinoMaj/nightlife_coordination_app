@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
   // decode the token using key-phrase
-  return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+  return jwt.verify(token, process.env.JWT_SECRECT, (err, decoded) => {
     // the 401 code is for authorized status
     if (err) { return res.status(401).end(); }
   
