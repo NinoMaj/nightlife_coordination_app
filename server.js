@@ -2,10 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const config = require('./config/index.json');
 require('dotenv').load();
 // connect to the database and load models
-require('./server/models').connect(process.env.DB_URI_LOCAL);
+require('./server/models').connect(process.env.DB_URI_HEROKU);
 
 const app = express();
 
