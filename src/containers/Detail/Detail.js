@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     fontSize: "1.2em",
     cursor: "pointer",
     marginBottom: "15px",
-    ':focus':{
+    ':focus': {
       border: 'none'
     },
     ':active': {
@@ -73,7 +73,6 @@ export class Detail extends React.Component {
 
 
   componentDidMount() {
-    console.log('props in Detail', this.props)
     if (this.props.map) {
       this.getPlace(this.props.map);
     }
@@ -113,7 +112,6 @@ export class Detail extends React.Component {
   getWhoIsComing() {
     const xhr = new XMLHttpRequest();
     xhr.open('get', '/api/coming/' + this.props.match.params.detail);
-
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
@@ -123,9 +121,17 @@ export class Detail extends React.Component {
           this.setState({
             userComing: true
           });
+        } else {
+          this.setState({
+            userComing: false
+          });
         }
 
-        if (xhr.response.bar.coming) {
+        if (xhr.response.bar.coming === '') {
+          this.setState({
+            coming: 'nobody'
+          })
+        } else {
           this.setState({
             coming: xhr.response.bar.coming.join(", ")
           });
@@ -182,10 +188,10 @@ export class Detail extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
         this.getWhoIsComing();
-          this.setState({
-            userComing: false
-          });
-      } 
+        this.setState({
+          userComing: false
+        });
+      }
     });
     xhr.send();
   }
@@ -229,7 +235,7 @@ export class Detail extends React.Component {
         <p className={css(styles.paragraph)}>Website: {place.website}</p>
         <p className={css(styles.paragraph)}>Address: {place.formatted_address}</p>
         <p className={css(styles.paragraph)}>Phone number: {place.formatted_phone_number}</p>
-        {place.opening_hours && 
+        {place.opening_hours &&
           <p className={css(styles.paragraph)}>Currently {(place.opening_hours.open_now) ? 'open' : 'closed'}</p>
         }
         <p className={css(styles.paragraph)}>Coming: {this.state.coming || 'nobody'}</p>

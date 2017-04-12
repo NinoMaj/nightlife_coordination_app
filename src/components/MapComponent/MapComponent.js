@@ -63,7 +63,6 @@ export class MapComponent extends React.Component {
 
   }
   render() {
-    console.log('props in map Comp', this.props)    
     const { children } = this.props;
 
     return (

@@ -69,7 +69,7 @@
     "whatwg-fetch": "2.0.2"
   },
   "scripts": {
-    "start": "noder server.js",
+    "start": "node server.js",
     "startDev": "node config/webpack.config.dev.js && nodemon server",
     "build": "npm run build",
     "test": "node scripts/test.js --env=jsdom",

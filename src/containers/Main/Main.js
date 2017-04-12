@@ -98,7 +98,6 @@ export class MainwoRouter extends React.Component {
   }
 
     render() {
-      console.log('props in Main', this.props)
       let children = null;
       if (this.props.children) {
         // We have children in the Container component

@@ -17,6 +17,7 @@ router.get('/coming/:bar', (req, res) => {
       if (!bar) {
         bar = {coming: ""};
       }
+      console.log(bar)
       return res.status(200).json({
         bar
       });

@@ -9,8 +9,8 @@ require('./server/models').connect(process.env.DB_URI_HEROKU);
 const app = express();
 
 // tell the app to look for static files in these directories
-app.use(express.static('./public'));
 app.use(express.static('./build'));
+app.use(express.static('./public'));
 
 // tell the app to parse HTTP body messages 
 // parse application/x-www-form-urlencoded

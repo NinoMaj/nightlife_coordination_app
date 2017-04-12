@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { colors } from '../../colors';
 import Rating from '../Rating/Rating'
