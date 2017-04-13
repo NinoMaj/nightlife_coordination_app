@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 require('dotenv').config()
 // connect to the database and load models
-require('./server/models').connect(process.env.DB_URI_HEROKU);
+require('./server/models').connect('mongodb://heroku_vfdqdz48:676am8vrdmjl2vifse2i1oofbi@ds155490.mlab.com:55490/heroku_vfdqdz48');
 
 const app = express();
 
@@ -48,7 +48,7 @@ app.use(function (req, res) {
   res.status(404).send('Sorry cant find that!');
 })
 
-const port = process.env.SERVER_PORT || 5000;
+const port = 4000 || 5000;
 app.listen(port, () => {
   console.log('Server is running on http://localhost:' + port)
 })
