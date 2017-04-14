@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 require('dotenv').config()
 // connect to the database and load models
-require('./server/models').connect('mongodb://heroku_vfdqdz48:676am8vrdmjl2vifse2i1oofbi@ds155490.mlab.com:55490/heroku_vfdqdz48');
+require('./server/models').connect(process.env.DB_URI_HEROKU);
 
 const app = express();
 
