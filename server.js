@@ -48,7 +48,7 @@ app.use(function (req, res) {
   res.status(404).send('Sorry cant find that!');
 })
 
-const port = 4000 || 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log('Server is running on http://localhost:' + port)
 })
