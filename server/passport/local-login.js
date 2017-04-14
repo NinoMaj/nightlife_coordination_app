@@ -43,7 +43,7 @@ module.exports = new PassportLocalStrategy({
       };
 
       // create a token string
-      const token = jwt.sign(payload, 'The_property_jwtSecret_of_the_config_object_contains_a_secret_phrase_our_application_will_use_to_sign_tokens');
+      const token = jwt.sign(payload, process.env.JWT_SECRECT);
       const data = {
         name: user.name
       };
